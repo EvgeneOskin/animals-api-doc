@@ -1,0 +1,167 @@
+swagger: '2.0'
+info:
+  version: 0.2.0
+  title: Animals
+  description: >
+    An example for how to use Basic Auth with Swagger.
+
+    **User Name and Password**
+
+    * User Name: `user`
+
+    * Password: `pass`
+schemes:
+  - http
+securityDefinitions:
+  basicAuth:
+    type: basic
+    description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+
+paths:
+  /api/v1/pet/:
+    post:
+      security:
+        - basicAuth: []
+      parameters:
+        - name: pet
+          in: body
+          description: new Pet
+          required: true
+          schema:
+            "$ref": '#/definitions/pet'
+      responses:
+        '200':
+          schema:
+            "$ref": "#/definitions/pet"
+          description: 'The new pet of current user.'
+        '401':
+          schema:
+            "$ref": "#/definitions/unauthorized"
+          description: "User is not authenticated."
+    get:
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/pet"
+          description: 'Pet list.'
+        '401':
+          schema:
+            "$ref": "#/definitions/unauthorized"
+          description: "User is not authenticated."
+  /api/v1/breed/:
+    get:
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/breed"
+          description: 'Breed list.'
+        '401':
+          schema:
+            "$ref": "#/definitions/unauthorized"
+          description: "User is not authenticated."
+  /api/v1/birth/:
+    get:
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/birth"
+          description: 'Birth lists.'
+        '401':
+          schema:
+            "$ref": "#/definitions/unauthorized"
+          description: "User is not authenticated."
+
+definitions:
+  unauthorized:
+    title: Unuathorized
+    required:
+      - error
+    properties:
+      error:
+        type: string
+        enum:
+          - "401 Unauthorized"
+  pet:
+    title: Pet
+    description: An pet entity.
+    required:
+      - id
+      - father_id
+      - mother_id
+      - breed_id
+      - name
+      - created_at
+      - updated_at
+    properties:
+      id:
+        type: integer
+      breed_id:
+        type: integer
+      father_id:
+        type: integer
+      mother_id:
+        type: integer
+      name:
+        type: string
+      created_at:
+        type: string
+        format: date-time
+      updated_at:
+        type: string
+        format: date-time
+  breed:
+    title: Breed
+    description: An Bredd entity.
+    required:
+      - id
+      - name
+      - created_at
+      - updated_at
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      created_at:
+        type: string
+        format: date-time
+      updated_at:
+        type: string
+        format: date-time
+  birth:
+    title: Birth
+    description: An pet birth info.
+    required:
+      - id
+      - child_id
+      - father_id
+      - mother_id
+      - created_at
+      - updated_at
+    properties:
+      id:
+        type: integer
+      child_id:
+        type: integer
+      father_id:
+        type: integer
+      mother_id:
+        type: integer
+      created_at:
+        type: string
+        format: date-time
+      updated_at:
+        type: string
+        format: date-time
