@@ -28,7 +28,7 @@ paths:
           description: new Pet
           required: true
           schema:
-            "$ref": '#/definitions/pet'
+            "$ref": '#/definitions/createPet'
       responses:
         '200':
           schema:
@@ -38,6 +38,8 @@ paths:
           schema:
             "$ref": "#/definitions/unauthorized"
           description: "User is not authenticated."
+        '400':
+          description: "Invalid payload."
     get:
       security:
         - basicAuth: []
@@ -93,20 +95,13 @@ definitions:
         type: string
         enum:
           - "401 Unauthorized"
-  pet:
+  createPet:
     title: Pet
-    description: An pet entity.
     required:
-      - id
-      - father_id
-      - mother_id
       - breed_id
       - name
-      - created_at
-      - updated_at
+      - gender
     properties:
-      id:
-        type: integer
       breed_id:
         type: integer
       father_id:
@@ -115,49 +110,48 @@ definitions:
         type: integer
       name:
         type: string
-      created_at:
+      gender:
         type: string
-        format: date-time
-      updated_at:
-        type: string
-        format: date-time
+        enum:
+          - male
+          - female
+  pet:
+    title: Pet
+    allOf:
+      - $ref: '#/definitions/createPet'
+      - $ref: '#/definitions/timestamps'
   breed:
     title: Breed
+    allOf:
+      - $ref: '#/definitions/timestamps'
     description: An Bredd entity.
     required:
-      - id
       - name
-      - created_at
-      - updated_at
     properties:
-      id:
-        type: integer
       name:
         type: string
-      created_at:
-        type: string
-        format: date-time
-      updated_at:
-        type: string
-        format: date-time
   birth:
     title: Birth
-    description: An pet birth info.
+    allOf:
+      - $ref: '#/definitions/timestamps'
     required:
-      - id
       - child_id
       - father_id
       - mother_id
-      - created_at
-      - updated_at
     properties:
-      id:
-        type: integer
       child_id:
         type: integer
       father_id:
         type: integer
       mother_id:
+        type: integer
+  timestamps:
+    required:
+      - id
+      - created_at
+      - updated_at
+    properties:
+      id:
         type: integer
       created_at:
         type: string
